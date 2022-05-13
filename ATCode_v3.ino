@@ -9,8 +9,8 @@ Servo spinWheel;
 Servo clampLeft;
 Servo clampRight;
 Servo flipper;
-#define ButtonForward 8
-#define ButtonBackward 7
+#define ButtonForward 7
+#define ButtonBackward 8
 #define LED 6
 int pos = 0; //Variable used to store the position of the motor
 int lastButtonStateForward;    // the previous state of button
@@ -48,14 +48,14 @@ void loop() {
     //}
     lastDirection = 1;
     delay(50);
-    spinWheel.write(50);
+    spinWheel.write(85);
     delay(3000);
     spinWheel.write(90);
     //This code is meant to reduce shaking (idek if it'll work LOL)
     {
       spinArm.write(90);
-      spinArm.write(89);
-      spinArm.write(91);
+      //````spinArm.write(89);
+      //spinArm.write(91);
       spinArm.write(90);
     }
   }
@@ -67,14 +67,14 @@ void loop() {
     delay(500);                       // waits 500 ms for the servo to reach the position
     //}
     lastDirection = 0;
-    delay(2000);
-    spinWheel.write(130);
+    delay(1000);
+    spinWheel.write(105);
     delay(3000);
     spinWheel.write(90);
     {
       spinArm.write(90);
-      spinArm.write(89);
-      spinArm.write(91);
+      //spinArm.write(89);
+      //spinArm.write(91);
       spinArm.write(90);
     }
   }
