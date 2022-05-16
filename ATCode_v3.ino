@@ -49,7 +49,7 @@ void loop() {
     lastDirection = 1;
     delay(50);
     spinWheel.write(85);
-    delay(3000);
+    delay(1000);
     spinWheel.write(90);
     //This code is meant to reduce shaking (idek if it'll work LOL)
     {
@@ -69,7 +69,7 @@ void loop() {
     lastDirection = 0;
     delay(1000);
     spinWheel.write(105);
-    delay(3000);
+    delay(1000);
     spinWheel.write(90);
     {
       spinArm.write(90);
