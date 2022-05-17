@@ -42,9 +42,9 @@ void loop() {
   if (lastButtonStateForward == HIGH && currentButtonStateForward == LOW) {
     digitalWrite(LED, HIGH);
     Serial.println("The forward button is pressed");
-    (if lastDirection == 0) {
-      spinArm.write(0);              // tell servo to go to right position
-      delay(500);                   // waits 500 ms for the servo to reach the position
+    spinArm.write(0);              // tell servo to go to right position
+    delay(500);                   // waits 500 ms for the servo to reach the position
+    if (lastDirection == 0) {
       lastDirection = 1;    //Sets to see the system as being to the right
       flipper.write(180); //Moves it all the way to the right when viewing form upside down
     }
@@ -64,14 +64,14 @@ void loop() {
   else if (lastButtonStateBackward == HIGH && currentButtonStateBackward == LOW) { //Seems to do this after the button has been released
     digitalWrite(LED, HIGH);
     Serial.println("The backward button is pressed");
-    if (lastDirection ==1) {
     spinArm.write(180);
     delay(500);                       // waits 500 ms for the servo to reach the position
-    lastDirection = 0;
-    flipper.write(0);
+    if (lastDirection == 1) {
+      lastDirection = 0;
+      flipper.write(0);
     }
     delay(1000);
-    clampLeft.write(180); 
+    clampLeft.write(180);
     delay(50);
     { //Runs wheel and flipper at same time for 1 second
       spinWheel.write(105); //Starts to create the ride under the page
