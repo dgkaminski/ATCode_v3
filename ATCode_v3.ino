@@ -37,8 +37,9 @@ void setup()   {
   Serial.begin(9600);
   lastDirection = 1; //Set by default to be on right side of book
   spinArm.write(90);
-  flipper.write(180);
+  flipper.write(0);
   digitalWrite(LED, LOW);
+  clampLeft.write(0);
 }
 
 void loop() {
@@ -51,20 +52,25 @@ void loop() {
     digitalWrite(LED, HIGH);
     Serial.println("The forward button is pressed");
     spinArm.write(0);              // tell servo to go to right position
-    delay(1000);                   // waits 500 ms for the servo to reach the position
-    flipper.write(180); //Moves it all the way to the right when viewing from right side up
+    delay(500);                   // waits 500 ms for the servo to reach the position
     clampRight.write(0); //Releases the clamp from the right side of the book (hopefully)
     delay(50);
     { //Runs wheel and flipper at same time for 1 second
-      spinWheel.write(85); //Starts to create the ridge under the page
+      spinWheel.write(80); //Starts to create the ridge under the page
     }
-    delay(2000);        //Wait 1000ms or 1s
+    delay(1000);        //Wait 1000ms or 1s
     spinWheel.write(90);
-    clampLeft.write(180); //Raises the left clamp
-    flipper.write(0); //Flips the page
     clampRight.write(90);  //Lowers right clamp
-    clampLeft.write(90); //Lowers left clamp
+    clampLeft.write(90); //Raises the left clamp
+    delay(1000);
     spinArm.write(90);
+    delay(1000);
+    flipper.write(180); //Moves it all the way to the right when viewing from right side up
+    delay(1000);
+    clampLeft.write(0); //Lowers left clamp
+    delay(1000);
+    flipper.write(0); //Flips the page
+ 
   }
   else if (lastButtonStateBackward == HIGH && currentButtonStateBackward == LOW) { //Seems to do this after the button has been released
     digitalWrite(LED, HIGH);
@@ -75,18 +81,25 @@ void loop() {
       lastDirection = 0;
       flipper.write(0);
     }
+    flipper.write(180);
     delay(1000);
-    clampLeft.write(180);
+    clampLeft.write(90);
     delay(50);
     { //Runs wheel and flipper at same time for 1 second
       spinWheel.write(100); //Starts to create the ride under the page
     }
-    delay(2000);
+    delay(1000);
     spinWheel.write(90);
-    clampLeft.write(90); //DIFFERENT BECAUSE THIS CLAMPS BACK DOWN BEFORE THE PAGE IS FLIPPED
-    flipper.write(180);
+    clampRight.write(0);
+    clampLeft.write(0); //DIFFERENT BECAUSE THIS CLAMPS BACK DOWN BEFORE THE PAGE IS FLIPPED
+    
+
+    delay(1000);
+    flipper.write(0);
+    delay(1000);
     clampRight.write(90);
     spinArm.write(90);
+
   }
   else {
     digitalWrite(9, LOW);
