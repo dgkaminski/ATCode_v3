@@ -3,15 +3,20 @@
 //#include <Adafruit_PWMServoDriver.h>
 //Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 Servo spinArm;
-int angleArm = 0;
-int angleWheel = 0;
 Servo spinWheel;
 Servo clampLeft;
 Servo clampRight;
 Servo flipper;
 #define ButtonForward 7
 #define ButtonBackward 8
-#define LED 6
+#define LED 9
+/*#define SERVOMIN  75 // This is the 'minimum' pulse length count (out of 4096)
+  #define SERVOMAX  435 // This is the 'maximum' pulse length count (out of 4096) //BOTH ABOVE FOR ARM
+  #define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
+  #define USMIN  2000 // This is the rounded 'minimum' microsecond length based on the minimum pulse of 150
+  #define USMAX  2400 // This is the rounded 'maximum' microsecond length based on the maximum pulse of 600
+  int angleArm = 0;
+  int angleWheel = 0;*/
 int pos = 0; //Variable used to store the position of the motor
 int lastButtonStateForward;    // the previous state of button
 int currentButtonStateForward; // the current state of button
@@ -20,8 +25,9 @@ int currentButtonStateBackward; // the current state of button
 int lastDirection; //The last direction that the arm was in, if it's at 1 was at right of book
 
 void setup()   {
-  pinMode(6, OUTPUT);
-  pinMode(8, INPUT);
+  pinMode(9, OUTPUT); //Output for the LED
+  pinMode(8, INPUT); //Button input
+  pinMode(7, INPUT); //Button input
   spinWheel.attach(2);//The wheel servo is assigned pin 2
   spinArm.attach(3); //The arm servo is assigned pin 3
   clampLeft.attach(4); //The clamp for the left side of the book is assigned pin 4
@@ -31,6 +37,8 @@ void setup()   {
   Serial.begin(9600);
   lastDirection = 1; //Set by default to be on right side of book
   spinArm.write(90);
+  flipper.write(180);
+  digitalWrite(LED, LOW);
 }
 
 void loop() {
@@ -43,17 +51,14 @@ void loop() {
     digitalWrite(LED, HIGH);
     Serial.println("The forward button is pressed");
     spinArm.write(0);              // tell servo to go to right position
-    delay(500);                   // waits 500 ms for the servo to reach the position
-    if (lastDirection == 0) {
-      lastDirection = 1;    //Sets to see the system as being to the right
-      flipper.write(180); //Moves it all the way to the right when viewing form upside down
-    }
+    delay(1000);                   // waits 500 ms for the servo to reach the position
+    flipper.write(180); //Moves it all the way to the right when viewing from right side up
     clampRight.write(0); //Releases the clamp from the right side of the book (hopefully)
     delay(50);
     { //Runs wheel and flipper at same time for 1 second
-      spinWheel.write(85); //Starts to create the ride under the page
+      spinWheel.write(85); //Starts to create the ridge under the page
     }
-    delay(1000);        //Wait 1000ms or 1s
+    delay(2000);        //Wait 1000ms or 1s
     spinWheel.write(90);
     clampLeft.write(180); //Raises the left clamp
     flipper.write(0); //Flips the page
@@ -74,9 +79,9 @@ void loop() {
     clampLeft.write(180);
     delay(50);
     { //Runs wheel and flipper at same time for 1 second
-      spinWheel.write(105); //Starts to create the ride under the page
+      spinWheel.write(100); //Starts to create the ride under the page
     }
-    delay(1000);
+    delay(2000);
     spinWheel.write(90);
     clampLeft.write(90); //DIFFERENT BECAUSE THIS CLAMPS BACK DOWN BEFORE THE PAGE IS FLIPPED
     flipper.write(180);
