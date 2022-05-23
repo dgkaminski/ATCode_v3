@@ -32,7 +32,7 @@ void setup()   {
   spinArm.attach(3); //The arm servo is assigned pin 3
   clampLeft.attach(4); //The clamp for the left side of the book is assigned pin 4
   clampRight.attach(5); //The clamp for the right side of the book is assigned pin 5
-  flipper.attach(6);  //The flipper is assigned pin 6
+  flipper.attach(10);  //The flipper is assigned pin 10
   //pwm.begin();
   Serial.begin(9600);
   lastDirection = 1; //Set by default to be on right side of book
@@ -89,7 +89,7 @@ void loop() {
     spinArm.write(90);
   }
   else {
-    digitalWrite(6, LOW);
+    digitalWrite(9, LOW);
   }
   delay (10);
 }
