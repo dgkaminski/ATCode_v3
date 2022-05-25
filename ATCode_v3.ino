@@ -1,7 +1,4 @@
 #include <Servo.h>
-//#include <Wire.h>
-//#include <Adafruit_PWMServoDriver.h>
-//Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 Servo spinArm;
 Servo spinWheel;
 Servo clampLeft;
@@ -10,13 +7,6 @@ Servo flipper;
 #define ButtonForward 7
 #define ButtonBackward 8
 #define LED 9
-/*#define SERVOMIN  75 // This is the 'minimum' pulse length count (out of 4096)
-  #define SERVOMAX  435 // This is the 'maximum' pulse length count (out of 4096) //BOTH ABOVE FOR ARM
-  #define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
-  #define USMIN  2000 // This is the rounded 'minimum' microsecond length based on the minimum pulse of 150
-  #define USMAX  2400 // This is the rounded 'maximum' microsecond length based on the maximum pulse of 600
-  int angleArm = 0;
-  int angleWheel = 0;*/
 int pos = 0; //Variable used to store the position of the motor
 int lastButtonStateForward;    // the previous state of button
 int currentButtonStateForward; // the current state of button
@@ -48,6 +38,10 @@ void setup()   {
   flipper.write(0);
   digitalWrite(LED, LOW);
   clampLeft.write(0);
+
+
+
+  //MODIFIABLE VALUES:
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   MinFreq = 650;        //How far the wheel goes down on the left side of the book, lower values means it goes lower
   MaxFreq = 3850;       //How far the wheel goes down on the right side of the book, higher values means it goes lower
@@ -55,10 +49,14 @@ void setup()   {
   wheelSpinTime = 750;  //How long the wheel spins in milliseconds
   //IDEAL: 625, 3850, 15, 750
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+  
 }
 
 void loop() {
-  //Note: for the arm angle 0 is all the way to the right, 90 is upright, and 180 is all the way to the left, like on a cartesian plane
+  //Note: for the arm angle 0 is all the way to the right, 90 is upright, and 180 is all the way to the left, like on a cartesian plane or a unit circle
   lastButtonStateForward    = currentButtonStateForward;      // save the last state
   lastButtonStateBackward    = currentButtonStateBackward;      // save the last state
   currentButtonStateForward = digitalRead(ButtonForward); // read new state
@@ -66,7 +64,7 @@ void loop() {
   if (lastButtonStateForward == HIGH && currentButtonStateForward == LOW) {
     digitalWrite(LED, HIGH);
     Serial.println("The forward button is pressed");
-    spinArm.writeMicroseconds(MinFreq);              // tell servo to go to right position
+    spinArm.writeMicroseconds(MinFreq);     // tell servo to go to left position
     delay(500);                   // waits 500 ms for the servo to reach the position
     clampRight.write(0); //Releases the clamp from the right side of the book (hopefully)
     delay(500);
