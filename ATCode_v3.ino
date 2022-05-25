@@ -24,6 +24,14 @@ int lastButtonStateBackward;    // the previous state of button
 int currentButtonStateBackward; // the current state of button
 int lastDirection; //The last direction that the arm was in, if it's at 1 was at right of book
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+int MinFreq;
+int MaxFreq;
+int Delta;
+int wheelSpinTime;
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 void setup()   {
   pinMode(9, OUTPUT); //Output for the LED
   pinMode(8, INPUT); //Button input
@@ -40,6 +48,13 @@ void setup()   {
   flipper.write(0);
   digitalWrite(LED, LOW);
   clampLeft.write(0);
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  MinFreq = 650;        //How far the wheel goes down on the left side of the book, lower values means it goes lower
+  MaxFreq = 3850;       //How far the wheel goes down on the right side of the book, higher values means it goes lower
+  Delta = 15;           //How far off of 90 the wheel write value is, the higher the delta the faste the wheel spinds
+  wheelSpinTime = 750;  //How long the wheel spins in milliseconds
+  //IDEAL: 625, 3850, 15, 750
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 }
 
 void loop() {
@@ -51,14 +66,14 @@ void loop() {
   if (lastButtonStateForward == HIGH && currentButtonStateForward == LOW) {
     digitalWrite(LED, HIGH);
     Serial.println("The forward button is pressed");
-    spinArm.writeMicroseconds(625);              // tell servo to go to right position
+    spinArm.writeMicroseconds(MinFreq);              // tell servo to go to right position
     delay(500);                   // waits 500 ms for the servo to reach the position
     clampRight.write(0); //Releases the clamp from the right side of the book (hopefully)
     delay(500);
     { //Runs wheel and flipper at same time for 1 second
-      spinWheel.write(70); //Starts to create the ridge under the page
+      spinWheel.write(90 - Delta); //Starts to create the ridge under the page
     }
-    delay(700);        //Wait 1000ms or 1s
+    delay(wheelSpinTime);        //Wait 1000ms or 1s
     spinWheel.write(90);
     clampRight.write(90);  //Lowers right clamp
     clampLeft.write(90); //Raises the left clamp
@@ -68,14 +83,15 @@ void loop() {
     flipper.write(180); //Moves it all the way to the right when viewing from right side up
     delay(1000);
     clampLeft.write(0); //Lowers left clamp
-    delay(2000);
+    delay(1000);
     flipper.write(0); //Flips the page
+
 
   }
   else if (lastButtonStateBackward == HIGH && currentButtonStateBackward == LOW) { //Seems to do this after the button has been released
     digitalWrite(LED, HIGH);
     Serial.println("The backward button is pressed");
-    spinArm.writeMicroseconds(3800);
+    spinArm.writeMicroseconds(MaxFreq);
     delay(500);                       // waits 500 ms for the servo to reach the position
     if (lastDirection == 1) {
       lastDirection = 0;
@@ -86,17 +102,18 @@ void loop() {
     clampLeft.write(90);
     delay(50);
     { //Runs wheel and flipper at same time for 1 second
-      spinWheel.write(110); //Starts to create the ride under the page
+      spinWheel.write(90 + Delta + 5); //Starts to create the ride under the page
     }
-    delay(1000);
+    delay(wheelSpinTime);
     spinWheel.write(90);
+    delay(500);
     spinArm.write(90);
     clampRight.write(0);
     delay(500);
-    clampLeft.write(0); //DIFFERENT BECAUSE THIS CLAMPS BACK DOWN BEFORE THE PAGE IS FLIPPED
+    clampLeft.write(0);
     delay(1000);
     flipper.write(0);
-    delay(2000);
+    delay(1000);
     clampRight.write(90);
   }
   else {
