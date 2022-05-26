@@ -43,8 +43,8 @@ void setup()   {
 
   //MODIFIABLE VALUES:
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  MinFreq = 650;        //How far the wheel goes down on the left side of the book, lower values means it goes lower
-  MaxFreq = 3850;       //How far the wheel goes down on the right side of the book, higher values means it goes lower
+  MinFreq = 600;        //How far the wheel goes down on the left side of the book, lower values means it goes lower
+  MaxFreq = 3900;       //How far the wheel goes down on the right side of the book, higher values means it goes lower
   Delta = 15;           //How far off of 90 the wheel write value is, the higher the delta the faste the wheel spinds
   wheelSpinTime = 750;  //How long the wheel spins in milliseconds
   //IDEAL: 625, 3850, 15, 750
@@ -52,7 +52,7 @@ void setup()   {
 
 
 
-  
+
 }
 
 void loop() {
@@ -73,11 +73,12 @@ void loop() {
     }
     delay(wheelSpinTime);        //Wait 1000ms or 1s
     spinWheel.write(90);
-    clampRight.write(90);  //Lowers right clamp
+    delay(500);
     clampLeft.write(90); //Raises the left clamp
     delay(1000);
     spinArm.write(90);
     delay(1000);
+    clampRight.write(90);  //Lowers right clamp
     flipper.write(180); //Moves it all the way to the right when viewing from right side up
     delay(1000);
     clampLeft.write(0); //Lowers left clamp
